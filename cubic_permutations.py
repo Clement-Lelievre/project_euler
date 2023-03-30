@@ -7,7 +7,7 @@ from collections import defaultdict
 
 
 def solve(n_perm: int) -> int:
-    cubes = defaultdict(list)
+    cubes: defaultdict = defaultdict(list)
     n = 0
     while max(map(len, cubes.values()), default=0) < n_perm:
         cubes["".join(sorted(str(n**3)))].append(n)

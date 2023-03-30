@@ -13,6 +13,8 @@ https://projecteuler.net/problem=98
 """
 from collections import defaultdict
 from itertools import chain, combinations
+
+# to do: move this to text file...
 WORDS = [
     "A",
     "ABILITY",
@@ -1803,9 +1805,8 @@ WORDS = [
 ]
 
 
-
 # it seems more efficient to start from the squares instead of trying all possibilities of assigning a digit to each letter
-def word_to_index(word1: str, word2: str) -> frozenset:
+def word_to_index(word1: str, word2: str) -> str:
     # to do: docstring is not explicit enough
     """Analyses the placement of each character in `word1` and `word2` by parsing left to rigth
     and writing down the letter number when the letter appears
@@ -1817,7 +1818,7 @@ def word_to_index(word1: str, word2: str) -> frozenset:
     Returns:
         str: the corresponding order of appearance of each letter, denoted by a digit 0 to 9
     """
-    seen = {}
+    seen: dict[str, str] = {}
     ret = ""
     for char in min(word1, word2):
         seen.setdefault(char, str(len(seen)))
@@ -1837,12 +1838,12 @@ def solve(words: list[str]) -> int:
         int: the highest square from a square anagram word pair
     """
     # 1 identify the anagrams
-    anagrams = defaultdict(list)
+    all_anagrams = defaultdict(list)
     for word in words:
-        anagrams["".join(sorted(word))].append(word)
+        all_anagrams["".join(sorted(word))].append(word)
     anagrams = {
         reference: siblings
-        for reference, siblings in anagrams.items()
+        for reference, siblings in all_anagrams.items()
         if len(siblings) > 1
         and len(set(reference))
         <= 10  # we want at least 2 words sharing the same "reference" (sorted word)
@@ -1854,13 +1855,13 @@ def solve(words: list[str]) -> int:
         for comb in combinations(v, 2):
             cand_encoded[word_to_index(*comb)].append(comb)
     # 2 get the square anagrams of the right length
-    squares = defaultdict(list)
+    all_squares = defaultdict(list)
     i = 0
     while len((ssq := str((sq := i**2)))) < max_len + 1:
-        squares["".join(sorted(ssq))].append(sq)
+        all_squares["".join(sorted(ssq))].append(sq)
         i += 1
-    squares = {
-        k: v for k, v in squares.items() if len(v) > 1 and len(set(k)) <= 10
+    squares: dict[str, list[int]] = {
+        k: v for k, v in all_squares.items() if len(v) > 1 and len(set(k)) <= 10
     }  # retain anagrams
     squares_encoded = defaultdict(list)
     for v in squares.values():
@@ -1869,10 +1870,15 @@ def solve(words: list[str]) -> int:
     solution_squares = {
         k: v for k, v in squares_encoded.items() if k in cand_encoded
     }  # filter using numbers that have the same character sequence
-    answer = max(list(chain(*solution_squares.values())), default="no solution")
+    answer = max(chain(*solution_squares.values()), default="no solution")
     print(answer)
     return answer
 
+
+# to do given more time:
+# check edge cases
+# optimize the code
+# write integration tests and unit tests
 
 if __name__ == "__main__":
     assert solve(["race", "care"]) == 9216
