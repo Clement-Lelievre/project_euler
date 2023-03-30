@@ -3,8 +3,8 @@
 What is the expected number of distinct colours in 20 randomly picked balls?
 
 Give your answer with nine digits after the decimal point (a.bcdefghij)."""
-from random import choice
 from multiprocessing import Pool
+from random import choice
 
 # the fact that I need to display the correct first nine digits tells me
 # that Monte Carlo is not the way to go, but I still want to try
