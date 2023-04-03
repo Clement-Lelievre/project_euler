@@ -19,7 +19,7 @@ def solve(matrix: list[list[int]]):
     seen = {}
     while queue:
         score, (x, y) = queue.popleft()
-        if seen.get((x, y), float('inf')) < score:
+        if seen.get((x, y), float("inf")) < score:
             continue
         seen[(x, y)] = score
         if (x, y) == dest:
@@ -41,4 +41,3 @@ if __name__ == "__main__":
             if row.strip()
         ]
     )
-    
