@@ -23,8 +23,8 @@ def find_upper_bound() -> int:
     n = 1
     while 10**n - 1 <= n * 362_880:  # 9!, because 9 is the biggest possible digit
         n += 1
-    logging.info(f"Search space: up to {n}-digit numbers")
-    return n
+    logging.info(f"Search space: up to {n-1}-digit numbers")
+    return n - 1
 
 
 def solve() -> None:
