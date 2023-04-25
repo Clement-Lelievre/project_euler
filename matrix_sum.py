@@ -11,11 +11,13 @@ For example, the Matrix Sum of the matrix below equals 3315 ( = 863 + 383 + 343 
 
 Find the Matrix Sum of MATRIX"""
 import logging
+import time
 from collections import deque
+
+import numpy as np
 
 # from pprint import pprint # used for debugging
 
-import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 
@@ -69,6 +71,7 @@ def traverse_graph(matrix: np.ndarray) -> int:
     Returns:
         int: the max path sum found along the way
     """
+    starttime = time.time()
     queue: deque = deque()
     NB_ROWS, NB_COLS = matrix.shape
     COL_NB_SET = set(range(NB_COLS))
@@ -96,10 +99,48 @@ def traverse_graph(matrix: np.ndarray) -> int:
                     path_sum + matrix[x + 1, next_col],
                 )
             )
-    logging.info(f"{current_best=}")
+    logging.info(f"{current_best=} in {time.time() - starttime}s")
     return current_best
 
 
+def dp_solution(multiline_string_matrix: str):
+    """Submitted by user MrDrake from Australia on Project Euler,
+    on Sept 4th 2011. This solution leverages dynamic programming
+    and is way, way faster than mine (180 times, or about 2 orders of magnitude!)
+    while being also more compact, using less dependencies and probably less memory!
+    Hats off to you, MrDrake!"""
+    starttime = time.time()
+    matrix = [
+        list(map(int, rs.split()))
+        for row in multiline_string_matrix.splitlines()
+        if (rs := row.strip())
+    ]  # this is my version of pre-processing the input
+    MINUS_INF = -float("inf")
+    n = len(matrix)
+    dp = {0: 0}
+    # key is a bitmask representing the set of columns already visited,
+    # value is the max sum of the path
+    for row in range(n):
+        z = {}
+        for column in range(n):
+            x = 1 << column
+            # set the bit of the current column to 1, all other remain 0
+            for d in dp:
+                if x & d:
+                    # if in this mask, column `column` is visited, skip
+                    continue
+                y = matrix[row][column] + dp[d]
+                # path sum = current cell weight + previous path sum
+                if z.get(x | d, MINUS_INF) < y:
+                    z[x | d] = y  # update the max path sum
+        dp = z
+    logging.info(f"{dp[(1<<n)-1]} in {time.time() - starttime}sec")
+    return dp[(1 << n) - 1]  # (1 << n) - 1 is the mask with all bits set to 1,
+    # meaning we want the max path sum for all columns
+
+
 if __name__ == "__main__":
-    assert traverse_graph(get_matrix(TEST_MATRIX)) == 3_315
-    traverse_graph(get_matrix(MATRIX))
+    # assert traverse_graph(get_matrix(TEST_MATRIX)) == 3_315
+    # traverse_graph(get_matrix(MATRIX))
+    assert dp_solution(TEST_MATRIX) == 3315
+    dp_solution(MATRIX)
