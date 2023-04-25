@@ -82,7 +82,7 @@ def traverse_graph(matrix: np.ndarray) -> int:
     seen: dict[tuple, int] = {}
     current_best = 0
     while queue:
-        pos, rem_cols, path_sum = queue.popleft()
+        pos, rem_cols, path_sum = queue.pop()  # way faster than .popleft() -> DFS beats BFS here due to faster getting seen states, I think
         x = pos[0]
         if seen.get((x, rem_cols), -1) >= path_sum:
             continue
@@ -140,7 +140,7 @@ def dp_solution(multiline_string_matrix: str):
 
 
 if __name__ == "__main__":
-    # assert traverse_graph(get_matrix(TEST_MATRIX)) == 3_315
-    # traverse_graph(get_matrix(MATRIX))
-    assert dp_solution(TEST_MATRIX) == 3315
-    dp_solution(MATRIX)
+    assert traverse_graph(get_matrix(TEST_MATRIX)) == 3_315
+    traverse_graph(get_matrix(MATRIX))
+    # assert dp_solution(TEST_MATRIX) == 3315
+    # dp_solution(MATRIX)
