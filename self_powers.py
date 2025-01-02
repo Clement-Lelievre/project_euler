@@ -1,3 +1,5 @@
+"""https://projecteuler.net/problem=48"""
+
 def naive_solution(up_to: int, n_digits: int = 10) -> str:
     # does not scale for big enough numbers
     # but unfortunately it still scales for the input, which makes the problem brute-forceable
