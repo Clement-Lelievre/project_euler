@@ -33,7 +33,7 @@ smarter_solution(up_to=1371)
 try:
     naive_solution(
         up_to=1371
-    )  # 1371 is the first integer such that the naive solution no longer scales => ValueError: Exceeds the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
+    )  # 1371 is the first integer on my machine such that the naive solution no longer scales, raising: ValueError: Exceeds the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
 except ValueError:
     print("naive solution does not scale starting from up_to=1371")
-    # I wanted to get the exact value on wolfram to compare my modular solution, but didn't get the exact result: https://www.wolframalpha.com/input?i=sum%28k%5Ek%2C+k%3D1+to+1371%29
+    # I wanted to get the exact value on Wolfram to compare to my modular solution, but didn't get the exact result: https://www.wolframalpha.com/input?i=sum%28k%5Ek%2C+k%3D1+to+1371%29
