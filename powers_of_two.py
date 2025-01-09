@@ -1,6 +1,7 @@
 """https://projecteuler.net/problem=686"""
 
 from math import log10
+import time
 
 
 def explore(pattern: int, nth: int) -> int:
@@ -52,46 +53,18 @@ def solve(pattern: int, nth: int) -> int:
             break
         power += 1
     # step 2: iterate using a step of 196, 289, or 485 forward in the exponent
-    for ind in range(nth - nb_times_pattern_found):
-        for j, (candidate_power_space, value) in enumerate(
-            RELEVANT_POWERS_SPACES.items()
-        ):
-            cand = v * value
-            if (
-                j < 2
-            ):  # if we're checking the last one, it must be the one so no need to compute the leading digits
-                cand_len = int(log10(cand)) + 1
-                cand_leading_digits = cand // 10 ** (cand_len - pattern_len)
-            if j == 2 or cand_leading_digits == pattern:
+    for _ in range(nth - nb_times_pattern_found):
+        for candidate_power_space, value in RELEVANT_POWERS_SPACES.items():
+            cand = str(v * value)
+            if int(cand[: len(str(pattern))]) == pattern:
                 power += candidate_power_space
-                v = cand // (
-                    10**32
-                )  # hack: keep only the leading 32 digits to avoid getting intractable integers
-                if ind % 1000 == 0 and ind:
-                    print(f"found {ind} more valid powers of 2 (target: {nth})")
+                v = int(
+                    cand[:14]
+                )  # hack: keep only the 14 leading digits to speed up. The precision will still be OK for this input
                 break
 
     print(f"Ans: {power}")
     return power
-
-
-# my solution above is correct but does not scale well
-# I need something like the below, taken from the PE thread:
-
-
-def p(prefix, num):
-    v = 1.0
-    j = 0
-    while num > 0:
-        v *= 2
-        j += 1
-        if v > 1000:
-            v /= 10
-        if int(v) == prefix:
-            num -= 1
-            if num % 1000 == 0:
-                print(num)
-    return j
 
 
 if __name__ == "__main__":
