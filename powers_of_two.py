@@ -1,7 +1,6 @@
 """https://projecteuler.net/problem=686"""
 
 from math import log10
-import time
 
 
 def explore(pattern: int, nth: int) -> int:
@@ -67,6 +66,26 @@ def solve(pattern: int, nth: int) -> int:
     return power
 
 
+# just for the fun of it, implementing the solution at https://projecteuler.net/thread=686#342794
+def log_analysis(n: int) -> int:
+    # start from 1.23*10^k < 2^n < 1.24*10^k and apply log to all sides, getting:
+    # nlog(2) - log(1.24) < k < nlog(2) - log(1.23)
+    # now look if an integer k could fit into this for all n, and record them
+    c = 0
+    power = 1
+    a, b, log2 = log10(1.24), log10(1.23), log10(2)
+    while True:
+        if int(power * log2 - a) != int(power * log2 - b):
+            c += 1
+            if c == n:
+                print(power)
+                return power
+        power += 1
+    # it turns out to be way slower than solve()
+
+
 if __name__ == "__main__":
     assert solve(123, 45) == 12710
     solve(123, 678910)
+    assert log_analysis(45) == 12710
+    log_analysis(678910)
