@@ -42,7 +42,7 @@ def solve_from(start_total: int) -> int:
 
 
 def solve() -> None:
-    """Util function to get the solutions for the first 9 values, and then use that to find the solution for the 10^12 value.
+    """Get the solutions for the first 9 values (beyond it takes a long time), and then use that to find the solution for the >= 10^12 value.
     It's used to get an approx. of the ratio of consecutive solutions, which is then used to fast forward to the solution
     """
     total = 4
@@ -71,9 +71,9 @@ def solve() -> None:
         end="\n\n",
     )
 
-    ratio = min(totals[-1] / totals[-2], blues[-1] / blues[-2], reds[-1] / reds[-2])
+    ratio = min(totals[-1] / totals[-2], blues[-1] / blues[-2], reds[-1] / reds[-2]) # min to make sure we don't overshoot
     ans_total = totals[-1]
-    while ans_total < 10**12:
+    while ans_total < 10**12: # fast forward to the solution
         ans_total *= ratio
     solve_from(start_total=int(ans_total))
 
